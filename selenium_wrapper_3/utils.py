@@ -67,7 +67,9 @@ def populate(xpath: str | Nodes):
         yield nodes[i]
 
 
-def send_keys(xpath: str | Node, *value: str):
+def send_keys(xpath: str | Node, value: str | list[str]):
+    if isinstance(value, str):
+        value = [value]
     result = retry(lambda: driver().find_element("xpath", str(xpath)).send_keys(*value))
     if result == CannotFindElement:
         raise CannotFindElement(xpath)

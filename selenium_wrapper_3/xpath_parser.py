@@ -32,7 +32,7 @@ Operator = Literal[
     "not ends with",
 ]
 
-Operand = Union[str, int, float, tuple, list]
+Operand = Union[str, int, float, list]
 Expr = tuple[Operand, Operator, Operand]
 
 
@@ -91,7 +91,7 @@ def parse_arg(expr: Expr | str):  # noqa: C901, PLR0911
         if isinstance(op2, str):
             # 어떤거 not in 속성 -> not(contains(속성, a))
             return f"not(contains({op2},{quote_if_str(op1)})"
-        elif isinstance(op2, (tuple, list)):
+        elif isinstance(op2, list):
             # 속성 not in (a, b, c) -> not(속성=a or 속성=b or 속성=c)
             return " and ".join(f"{op1}!={quote_if_str(v)}" for v in op2)
 
@@ -117,7 +117,7 @@ if __name__ == "__main__":
     print(parse_arg("text"))
     print(parse_arg(("text", ">", 1)))
     print(parse_arg(("hi", "in", "class")))
-    print(parse_arg(("class", "in", ("a", "b", "c"))))
+    print(parse_arg(("class", "in", ["a", "b", "c"])))
     print(parse_arg(("class", "not in", "a")))
     print(parse_arg(("class", "not in", ["a", "b", "c"])))
     print(parse_arg(("class", "starts with", "a")))
