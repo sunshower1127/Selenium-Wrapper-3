@@ -5,6 +5,8 @@ name = "pypi"
 
 [packages]
 selenium = "*"
+selenium-wrapper-3 = {file = ".", editable = true}
+python-dateutil = "*"
 
 [dev-packages]
 

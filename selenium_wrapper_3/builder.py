@@ -2,9 +2,8 @@ from time import sleep
 from typing import Callable, Literal
 
 from selenium.webdriver import ChromeOptions
-
-from .singleton import SingletonMeta
-from .utils import Driver, url
+from selenium_wrapper_3.singleton import SingletonMeta
+from selenium_wrapper_3.utils import Driver, url
 
 Option = Literal[
     "do not quit",
