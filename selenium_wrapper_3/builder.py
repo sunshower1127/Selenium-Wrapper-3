@@ -1,42 +1,54 @@
 from time import sleep
-from typing import Literal
+from typing import Callable, Literal
 
 from selenium.webdriver import ChromeOptions
 
 from .singleton import SingletonMeta
 from .utils import Driver, url
 
-Options = Literal[
-    "keep_browser_open",
-    "mute_audio",
+Option = Literal[
+    "do not quit",
+    "mute audio",
     "maximize",
     "headless",
-    "disable_popup",
-    "disable_info_bar",
+    "disable blocking alert",
+    "disable top infobar",
 ]
+
+option_dict: dict[Option, Callable[[ChromeOptions], None]] = {
+    "do not quit": lambda options: options.add_experimental_option("detach", True),  # noqa: FBT003
+    "mute audio": lambda options: options.add_argument("--mute-audio"),
+    "maximize": lambda options: options.add_argument("--start-maximized"),
+    "headless": lambda options: options.add_argument("--headless"),
+    "disable blocking alert": lambda options: options.add_argument(
+        "--disable-popup-blocking"
+    ),
+    "disable top infobar": lambda options: options.add_argument("--disable-infobars"),
+}
 
 
 class ChromeBuilder(metaclass=SingletonMeta):
-    freq = 0.5
-    timeout = 10
-
     def __init__(self) -> None:
         self.options = ChromeOptions()
+        self.freq = 0.5
+        self.timeout = 10
 
-    def add_option(self, option: Options):
-        if option == "keep_browser_open":
-            self.options.add_experimental_option("detach", True)  # noqa: FBT003
-        elif option == "mute_audio":
-            self.options.add_argument("--mute-audio")
-        elif option == "maximize":
-            self.options.add_argument("--start-maximized")
-        elif option == "headless":
-            self.options.add_argument("--headless")
-        elif option == "disable_popup":
-            self.options.add_argument("--disable-popup-blocking")
-        elif option == "disable_info_bar":
-            self.options.add_argument("--disable-infobars")
+    def add_option(self, option: Option):
+        option_dict[option](self.options)
+        return self
 
+    def debug_setting(self):
+        self.add_option("do not quit")
+        self.add_option("mute audio")
+        self.add_option("disable blocking alert")
+        self.add_option("disable top infobar")
+        return self
+
+    def headless_setting(self):
+        self.add_option("headless")
+        self.add_option("mute audio")
+        self.add_option("disable blocking alert")
+        self.add_option("disable top infobar")
         return self
 
     def add_argument(self, argument: str):
@@ -65,6 +77,6 @@ class ChromeBuilder(metaclass=SingletonMeta):
 
 
 if __name__ == "__main__":
-    ChromeBuilder().add_option("disable_info_bar").build()
+    ChromeBuilder().debug_setting().build()
     url("https://google.com")
     sleep(100)
