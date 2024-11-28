@@ -2,7 +2,12 @@ from __future__ import annotations
 
 from typing import TypeVar, overload
 
-from selenium_wrapper_3.xpath_parser import Expr, parse_arg, parse_kwarg, wrap
+from selenium_wrapper_3._xpath_parser.xpath_parser import (
+    Expr,
+    parse_arg,
+    parse_kwarg,
+    wrap,
+)
 
 T = TypeVar("T")
 SubNode = TypeVar("SubNode", bound="Node")

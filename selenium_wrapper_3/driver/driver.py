@@ -1,5 +1,5 @@
 from selenium.webdriver import Chrome
-from selenium_wrapper_3.singleton import SingletonMeta
+from selenium_wrapper_3.pattern.singleton import SingletonMeta
 
 
 class RetryContext:
@@ -18,11 +18,11 @@ class RetryContext:
 class Driver(metaclass=SingletonMeta):
     def __init__(self, options=None):
         if options:
-            self.driver = Chrome(options=options)
+            self.web = Chrome(options=options)
         else:
-            self.driver = Chrome()
+            self.web = Chrome()
 
-        self.driver.implicitly_wait(0)
+        self.web.implicitly_wait(0)
         self.freq = 0.5
         self.timeout = 10
 
@@ -31,7 +31,3 @@ class Driver(metaclass=SingletonMeta):
         self.freq = freq
         self.timeout = timeout
         return retry_context
-
-
-def driver():
-    return Driver().driver

@@ -2,8 +2,8 @@ from time import sleep
 from typing import Callable, Literal
 
 from selenium.webdriver import ChromeOptions
-from selenium_wrapper_3.singleton import SingletonMeta
-from selenium_wrapper_3.utils import Driver, url
+from selenium_wrapper_3.pattern.singleton import SingletonMeta
+from selenium_wrapper_3.util.util import Driver, url
 
 Option = Literal[
     "do not quit",
@@ -13,6 +13,7 @@ Option = Literal[
     "disable blocking alert",
     "disable top infobar",
 ]
+
 
 option_dict: dict[Option, Callable[[ChromeOptions], None]] = {
     "do not quit": lambda options: options.add_experimental_option("detach", True),  # noqa: FBT003
@@ -71,7 +72,7 @@ class ChromeBuilder(metaclass=SingletonMeta):
     def build(self):
         driver = Driver(self.options)
         if hasattr(self, "width") and hasattr(self, "height"):
-            driver.driver.set_window_size(self.width, self.height)
+            driver.web.set_window_size(self.width, self.height)
         driver.set_retry(self.freq, self.timeout)
 
 

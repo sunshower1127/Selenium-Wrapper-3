@@ -5,13 +5,13 @@ from time import sleep
 from typing import TYPE_CHECKING, Any, TypeVar, overload
 
 from selenium.common.exceptions import WebDriverException
-from selenium_wrapper_3.driver import Driver, driver
-from selenium_wrapper_3.exceptions import (
+from selenium_wrapper_3.driver.driver import Driver
+from selenium_wrapper_3.exception.exception import (
     CannotFindElement,
     RetryUntilTimeout,
     SeleniumWrapperException,
 )
-from selenium_wrapper_3.node import Node
+from selenium_wrapper_3.node.node import Node
 
 if TYPE_CHECKING:
     from collections.abc import Generator
@@ -93,19 +93,19 @@ def retry_until(
 
 
 def url(addr: str):
-    driver().get(addr)
+    Driver().web.get(addr)
 
 
 @add_descendant
 def check(xpath: str | Node):
     print(xpath)
-    result = retry(lambda: driver().find_element("xpath", str(xpath)))
+    result = retry(lambda: Driver().web.find_element("xpath", str(xpath)))
     return result != CannotFindElement
 
 
 @add_descendant
 def count(xpath: str | Node):
-    result = len(driver().find_elements("xpath", str(xpath)))
+    result = len(Driver().web.find_elements("xpath", str(xpath)))
     return result
 
 
@@ -152,7 +152,9 @@ def populate(xpath: str | SubNode):  # type: ignore[SubNode]
 def send_keys(xpath: str | Node, value: str | list[str]):
     if isinstance(value, str):
         value = [value]
-    result = retry(lambda: driver().find_element("xpath", str(xpath)).send_keys(*value))
+    result = retry(
+        lambda: Driver().web.find_element("xpath", str(xpath)).send_keys(*value)
+    )
     if result == CannotFindElement:
         raise CannotFindElement(xpath)
 
@@ -164,7 +166,7 @@ def click(xpath: str | Node):
 
 @add_descendant
 def text(xpath: str | Node):
-    result = retry(lambda: driver().find_element("xpath", str(xpath)).text)
+    result = retry(lambda: Driver().web.find_element("xpath", str(xpath)).text)
     if isinstance(result, str):
         return result
 
@@ -172,7 +174,7 @@ def text(xpath: str | Node):
 
 
 def root_frame():
-    driver().switch_to.default_content()
+    Driver().web.switch_to.default_content()
 
 
 class FrameContext:
@@ -186,7 +188,9 @@ class FrameContext:
 @add_descendant
 def frame(xpath: str | Node):
     result = retry(
-        lambda: driver().switch_to.frame(driver().find_element("xpath", str(xpath)))
+        lambda: Driver().web.switch_to.frame(
+            Driver().web.find_element("xpath", str(xpath))
+        )
     )
 
     if result == CannotFindElement:
