@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from functools import wraps
 from time import sleep
-from typing import TYPE_CHECKING, Any, TypeVar, overload
+from typing import TYPE_CHECKING, Any, Literal, TypeVar, overload
 
 from selenium.common.exceptions import WebDriverException
 from selenium_wrapper_3.driver.driver import Driver
@@ -153,7 +153,7 @@ def populate(xpath: str | SubNode):  # type: ignore[SubNode]
         node = Node()
         node.xpath = xpath
 
-    for i in range(length):
+    for i in range(1, length + 1):
         yield node[i]
 
 
@@ -169,8 +169,20 @@ def send_keys(xpath: str | Node, value: str | list[str]):
 
 
 @add_descendant
-def click(xpath: str | Node):
-    send_keys(xpath, "\n")
+def click(xpath: str | Node, method: Literal["script", "click", "enter"] = "script"):
+    if method == "script":
+        retry(
+            lambda: Driver().web.execute_script(
+                "arguments[0].click();",
+                Driver().web.find_element("xpath", str(xpath)),
+            )
+        )
+        return
+
+    if method == "enter":
+        send_keys(xpath, "\n")
+    else:
+        retry(lambda: Driver().web.find_element("xpath", str(xpath)).click())
 
 
 @add_descendant

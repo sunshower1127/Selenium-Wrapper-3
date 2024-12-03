@@ -22,7 +22,7 @@ class Node:
     def __init__(self, *args: Expr | str | int, **kwargs: str | int | float | bool):
         tag_name = self.__class__.__name__.lower()
         if len(args) == 1 and isinstance(args[0], int):
-            self.xpath = wrap(tag_name, [str(args[0] + 1)])
+            self.xpath = wrap(tag_name, [str(args[0])])
             return
         conditions = [parse_arg(arg) if isinstance(arg, tuple) else arg for arg in args]
         conditions += [parse_kwarg(k, v) for k, v in kwargs.items()]
@@ -95,12 +95,12 @@ class Node:
                 msg = "인덱스는 1부터 시작합니다."
                 raise ValueError(msg)
             if index < 0:
-                index_str = f"last(){index if index != -1 else ''}"
+                index = f"last(){index if index != -1 else ''}"
 
             if self.xpath.startswith(("/", "(")):
-                new_node.xpath = f"({self})[{index_str}]"
+                new_node.xpath = f"({self})[{index}]"
             else:
-                new_node.xpath = f"(//{self})[{index_str}]"
+                new_node.xpath = f"(//{self})[{index}]"
 
         elif isinstance(index, str):
             new_node.xpath = f"{self}[{index}]"

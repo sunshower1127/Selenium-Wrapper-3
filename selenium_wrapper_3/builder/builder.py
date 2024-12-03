@@ -30,8 +30,7 @@ option_dict: dict[Option, Callable[[ChromeOptions], None]] = {
 class ChromeBuilder(metaclass=SingletonMeta):
     def __init__(self) -> None:
         self.options = ChromeOptions()
-        self.freq = 0.5
-        self.timeout = 10
+        self.configure_poll()
 
     def add_option(self, option: Option):
         option_dict[option](self.options)
@@ -61,7 +60,7 @@ class ChromeBuilder(metaclass=SingletonMeta):
         self.options.add_experimental_option(option, value)
         return self
 
-    def configure_poll(self, freq: float, timeout: float):
+    def configure_poll(self, freq=0.1, timeout=10):
         """Configure polling frequency and timeout
 
         Args:
