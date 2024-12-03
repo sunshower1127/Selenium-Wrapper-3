@@ -1,5 +1,7 @@
 # Selenium Wrapper 3
 
+![PyPI](https://img.shields.io/pypi/v/Selenium-Wrapper-3.svg)
+
 **ver1** - [Enhanced Selenium](https://github.com/sunshower1127/Enhanced-Selenium)
 
 **ver2** - [Sw Selenium](https://github.com/sunshower1127/Sw-Selenium)
@@ -14,11 +16,12 @@
 
 ## Quick Start
 
+프로젝트 설명...
+
 ### Installation
 
 ```shell
-git clone https://github.com/sunshower1127/Selenium-Wrapper-3
-pip install Selenium-Wrapper-3
+pip install selenium-wrapper-3
 ```
 
 ### Example Code

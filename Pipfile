@@ -8,6 +8,7 @@ selenium = "*"
 python-dateutil = "*"
 selenium-wrapper-3 = {file = ".", editable = true}
 pyperclip = "*"
+twine = "*"
 
 [dev-packages]
 
