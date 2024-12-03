@@ -9,7 +9,7 @@ class CannotFindElement(SeleniumWrapperException):
         super().__init__(self.message)
 
 
-class RetryUntilTimeout(SeleniumWrapperException):
+class PollTimeout(SeleniumWrapperException):
     def __init__(self, message: str):
         self.message = f"\033[91m{message}\033[0m"  # 빨간색 메시지
         super().__init__(self.message)

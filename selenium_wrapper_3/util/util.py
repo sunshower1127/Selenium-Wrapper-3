@@ -8,7 +8,7 @@ from selenium.common.exceptions import WebDriverException
 from selenium_wrapper_3.driver.driver import Driver
 from selenium_wrapper_3.exception.exception import (
     CannotFindElement,
-    RetryUntilTimeout,
+    PollTimeout,
     SeleniumWrapperException,
 )
 from selenium_wrapper_3.node.node import Node
@@ -71,9 +71,15 @@ def retry(func: Callable[[], T]):
     return CannotFindElement
 
 
-def retry_until(
-    func: Callable[[], T], condition: Callable[[T], bool] = lambda x: bool(x)
+def poll(
+    func: Callable[[], T],
+    condition: Callable[[T], bool] = lambda x: bool(x),
 ):
+    """Retry a function until it meets a condition or timeout.
+
+    Raises:
+        exception.PollTimeout: When the condition is not met within the timeout period
+    """
     for _ in range(int(Driver().timeout / Driver().freq)):
         try:
             result = func()
@@ -84,12 +90,15 @@ def retry_until(
         except WebDriverException:
             sleep(Driver().freq)
 
-    result = func()
-    if condition(result):
-        return result
-    else:
-        msg = f"Value: {result}"
-        raise RetryUntilTimeout(msg)
+    try:
+        result = func()
+        if condition(result):
+            return result
+        else:
+            msg = f"Value: {result}"
+        raise PollTimeout(msg)
+    except WebDriverException as e:
+        raise PollTimeout(e.msg or "") from None
 
 
 def url(addr: str):
@@ -125,15 +134,15 @@ def populate(xpath: str | SubNode):  # type: ignore[SubNode]
     """Simplify the following code:
 
     ```python
-    for i in range(count(All(_ // Div()))):
-        print(text(All(_ // Div())[i]))
+    for i in range(count(Div()))):
+        print(text(Div())[i]))
     ```
     into
     ```python
-    for div in populate(All(_ // Div())):
+    for div in populate(Div())):
         print(text(div))
 
-    print([text(div) for div in populate(All(_ // Div()))])
+    print([text(div) for div in populate(Div()))])
 
     """
     length = count(xpath)

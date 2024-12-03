@@ -1,3 +1,3 @@
-from .exception import CannotFindElement, RetryUntilTimeout, SeleniumWrapperException
+from .exception import CannotFindElement, PollTimeout, SeleniumWrapperException
 
-__all__ = ["CannotFindElement", "RetryUntilTimeout", "SeleniumWrapperException"]
+__all__ = ["CannotFindElement", "PollTimeout", "SeleniumWrapperException"]

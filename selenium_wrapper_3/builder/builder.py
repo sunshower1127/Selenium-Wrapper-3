@@ -38,6 +38,7 @@ class ChromeBuilder(metaclass=SingletonMeta):
         return self
 
     def debug_setting(self):
+        """Do not quit, mute audio, disable blocking alert, disable top infobar"""
         self.add_option("do not quit")
         self.add_option("mute audio")
         self.add_option("disable blocking alert")
@@ -45,6 +46,7 @@ class ChromeBuilder(metaclass=SingletonMeta):
         return self
 
     def headless_setting(self):
+        """Headless, mute audio, disable blocking alert, disable top infobar"""
         self.add_option("headless")
         self.add_option("mute audio")
         self.add_option("disable blocking alert")
@@ -59,7 +61,13 @@ class ChromeBuilder(metaclass=SingletonMeta):
         self.options.add_experimental_option(option, value)
         return self
 
-    def set_retry(self, freq: float, timeout: float):
+    def configure_poll(self, freq: float, timeout: float):
+        """Configure polling frequency and timeout
+
+        Args:
+            freq: Time between polls in seconds
+            timeout: Maximum time to poll in seconds
+        """
         self.freq = freq
         self.timeout = timeout
         return self

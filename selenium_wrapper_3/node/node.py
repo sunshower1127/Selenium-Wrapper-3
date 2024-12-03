@@ -87,22 +87,23 @@ class Node:
 
         return new_node
 
-    def __getitem__(self, index: int):
+    def __getitem__(self, index: int | str):
         new_node = self.__class__()
 
         if isinstance(index, int):
+            if index == 0:
+                msg = "인덱스는 1부터 시작합니다."
+                raise ValueError(msg)
             if index < 0:
                 index_str = f"last(){index if index != -1 else ''}"
-            else:
-                index_str = f"{index + 1}"
 
             if self.xpath.startswith(("/", "(")):
                 new_node.xpath = f"({self})[{index_str}]"
             else:
                 new_node.xpath = f"(//{self})[{index_str}]"
 
-        # elif isinstance(index, str):
-        #     new_node.xpath = f"{self}[{index}]"
+        elif isinstance(index, str):
+            new_node.xpath = f"{self}[{index}]"
 
         else:
             return NotImplemented
