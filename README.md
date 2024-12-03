@@ -1,6 +1,12 @@
 # Selenium Wrapper 3
 
-![PyPI](https://img.shields.io/pypi/v/Selenium-Wrapper-3.svg)
+### Installation
+
+[![PyPI - Package](https://img.shields.io/badge/Selenium--Wrapper--3-PyPI-blue?logo=pypi&logoColor=white&style=for-the-badge)](https://pypi.org/project/Selenium-Wrapper-3/)
+
+```shell
+pip install selenium-wrapper-3
+```
 
 **ver1** - [Enhanced Selenium](https://github.com/sunshower1127/Enhanced-Selenium)
 
@@ -14,14 +20,14 @@
 
 ---
 
-## Quick Start
+## Cli 지원
 
-프로젝트 설명...
-
-### Installation
+Selenium Wrapper 3의 Expression과 Xpath Expression을 양방향 번역해줌.
 
 ```shell
-pip install selenium-wrapper-3
+sw3
+# 안되면
+python -m selenium_wrapper_3
 ```
 
 ### Example Code
@@ -45,13 +51,14 @@ click( Button(text="MyPage") / Parent )
 with frame( IFrame(id="my-iframe") ):
     courses = Div(class_="course-header")
 
-    sleep(3)
+    courses_to_do = poll(
+        lambda: [
+            course
+            for course in populate(courses)
+            if text(course // A()) != "0"
+        ]
+    )
 
-    courses_to_do = [
-        course
-        for course in populate(courses)
-        if text(course // A()) != "0"
-    ]
 
 for course in courses_to_do:
 

@@ -1,8 +1,8 @@
 import pyperclip
 
+from .node import *
 from ._xpath_parser.sw3_parser import xpath2sw3
 from ._xpath_parser.xpath_parser import *
-from .node import *
 
 
 def is_xpath(expr: str) -> bool:
