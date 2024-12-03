@@ -2,6 +2,7 @@ from time import sleep
 from typing import Callable, Literal
 
 from selenium.webdriver import ChromeOptions
+
 from selenium_wrapper_3.pattern.singleton import SingletonMeta
 from selenium_wrapper_3.util.util import Driver, url
 
